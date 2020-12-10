@@ -106,8 +106,8 @@ def indices(seq, x):
     :param x: The element to be searched for.
     :return: A list of integers corresponding to the indices in ``seq`` at
         which ``x`` occurs. Comparison is performed by content (not by id),
-        meaning that if n is in the returned list, then it is the case that
-        ``seq[n] == x`` but not necessarily that ``seq[n] is x``
+        meaning that if gens is in the returned list, then it is the case that
+        ``seq[gens] == x`` but not necessarily that ``seq[gens] is x``
     """
     idx, idxs = -1, []
     app = idxs.append
@@ -120,6 +120,10 @@ def indices(seq, x):
 
 
 def get_caller():
+    """
+    This is copied from StackOverflow, and is not well tested
+    :return:
+    """
     frame = ins.currentframe()
     names = []
 
@@ -128,7 +132,6 @@ def get_caller():
             # to next outer frame
             frame = frame.f_back
             name = frame.f_code.co_name
-            print('f_locals', frame.f_locals)  # , 'clsname:', clsname)
             caller_class = frame.f_locals['self'].__class__.__name__
             names.append((caller_class, name))
             if name[0] == '!<':
@@ -176,7 +179,6 @@ def getsignature(routine, *implementors, default=None):
         try:
             f = getattr(c, name)
             doc = f.__doc__
-
             if sig:
                 return sig, c, doc
             sigobj = ins.signature(f)
@@ -193,7 +195,7 @@ def getsignature(routine, *implementors, default=None):
                 staticmethod: ()
             }.get(type(routine), ('self',)),
             '*args',
-            '**kwargs'
+            '**kwa'
         )
     return default, None, None
 
