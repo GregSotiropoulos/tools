@@ -11,16 +11,14 @@ import re
 
 
 def copy_func(f, name=None):
-    """Copy a function.
-
-    Return a function with the same code, globals, defaults, closure, and name
-    (unless a new name is provided) as the input callable.
+    """
+    Copy a function; that is, return a function with the same code, globals,
+    defaults, closure, and name (unless a new name is provided) as the input
+    callable.
 
     :param f: The function to be copied.
-
     :param name: The new function's name. If omitted, the input function's name
         is used.
-
     :return: The new function.
     """
     return FunctionType(
@@ -33,24 +31,20 @@ def copy_func(f, name=None):
 
 
 def subdic(dic, keys=None, inplace=False):
-    """Sub-dictionary.
-
-    Return the subset of the specified mapping whose keys appear in the
-    specified iterable.
+    """
+    Get a sub-dictionary, ie the subset of the specified mapping whose keys
+    appear in the specified iterable.
 
     :param dic: The input mapping (aka dictionary).
-
     :param keys: An iterable of valid (ie hashable) keys.
-
     :param inplace: If True, perform "in place" operation, meaning that each
         matching item is first popped from the original before it is added to
         the so that at at any point the total amount of memory consumed during
         the operation is constant (or almost constant, as it is not a true
         operation; a new dictionary is created rather than non-matching items
         being deleted from the original mapping.
-
     :return: A new mapping consisting of all elements of ``dic`` whose keys
-    appear in ``keys``.
+        appear in ``keys``.
     """
 
     if keys is None:
@@ -73,7 +67,8 @@ def subdic(dic, keys=None, inplace=False):
 
 
 def eye(x, *args, **kwargs):
-    """The identity function.
+    """
+    Identity function.
 
     :return: The input argument, if there is only one, otherwise a tuple of all
         arguments and values of all keyword arguments.
@@ -88,10 +83,8 @@ def norm(x, p=2):
     p-norm of a vector. See https://en.wikipedia.org/wiki/Lp_space
 
     :param x: Input vector, in the form of an iterable (or a matrix, if numpy).
-
     :param p: The exponent. A value of 2 (the default) corresponds to the
         Euclidean norm. It can be inf, in which case ``norm(x, p) == max(x)``.
-
     :return: The norm.
     """
     p = min(max(1, p), sys.float_info.max_10_exp)
@@ -107,7 +100,7 @@ def indices(seq, x):
     :return: A list of integers corresponding to the indices in ``seq`` at
         which ``x`` occurs. Comparison is performed by content (not by id),
         meaning that if gens is in the returned list, then it is the case that
-        ``seq[gens] == x`` but not necessarily that ``seq[gens] is x``
+        ``seq[gens] == x`` but not necessarily that ``seq[gens] is x``.
     """
     idx, idxs = -1, []
     app = idxs.append
@@ -119,31 +112,9 @@ def indices(seq, x):
         return idxs
 
 
-def get_caller():
-    """
-    This is copied from StackOverflow, and is not well tested
-    :return:
-    """
-    frame = ins.currentframe()
-    names = []
-
-    while True:  # keep moving
-        try:
-            # to next outer frame
-            frame = frame.f_back
-            name = frame.f_code.co_name
-            caller_class = frame.f_locals['self'].__class__.__name__
-            names.append((caller_class, name))
-            if name[0] == '!<':
-                break
-        except KeyError as exc:
-            # err(exc)  # prints 'self' to stderr
-            break
-    return names
-
-
 def getsignature(routine, *implementors, default=None):
-    """Retrieves the signature of a callable (method/function/etc).
+    """
+    Retrieve the signature of a callable (method/function/etc).
 
     Utility function that slightly extends the ``signature`` method of the
     ``inspect`` module and tries some alternatives when the latter fails (which
@@ -156,11 +127,9 @@ def getsignature(routine, *implementors, default=None):
     :param implementors: Tuple of classes that contain methods of the same
         name as the callable. These serve as a fallback in case the callable
         does not contain enough metadata to accurately retrieve its signature.
-
     :param default: Default signature, which is ``('self', '*args', '**kw)``,
         unless ``routine`` is a ``classmethod`` or ``staticmethod``, in which
         case the first element, ``'self'``, is omitted.
-
     :return: A 3-tuple. The first element is the signature, which is itself
         a list of strings containing the names (and, when present, the default
         values) of all arguments. The second element is the implementation
@@ -231,6 +200,20 @@ def ordinal(n):
 
 
 def format_bytes(n, precision=2):
+    """
+    Formats an integer as a multiple of bytes, using the appropriate prefix.
+    Examples:
+
+    >>> format_bytes(12345)
+    '12.06 KB'
+
+    >>> format_bytes(12345, 0)
+    '12 KB'
+
+    :param n:
+    :param precision:
+    :return:
+    """
     prefixes, m = ' KMGTPEZY', floor(log2(n)/10)
     mm = min(m, len(prefixes)-1)
     # default precision: bytes -> 0.0f, K-Y -> 0.2f, beyond Y -> 0.2e
@@ -245,10 +228,10 @@ def err(*args, **kwargs):
 
 
 def prl(*lines, **kwargs):
-    """Prints each element in ``lines`` in its own line.
+    """
+    Prints each element in ``lines`` in its own line.
 
     :param lines: Iterable to be printed line-by-line
-
     :param kwargs: Keyword arguments for the builtin ``print()``
     """
     kwargs['sep'] = '\n'
