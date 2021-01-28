@@ -87,8 +87,10 @@ def norm(x, p=2):
         Euclidean norm. It can be inf, in which case ``norm(x, p) == max(x)``.
     :return: The norm.
     """
-    p = min(max(1, p), sys.float_info.max_10_exp)
-    return fsum(map(p.__rpow__, x))**(1/p)
+    if p <= 0:
+        raise ValueError("'p' must be strictly positive")
+    p = min(p, sys.float_info.max_10_exp)
+    return fsum(map(p.__rpow__, map(abs, x)))**(1/p)
 
 
 def indices(seq, x):
@@ -116,6 +118,7 @@ def getsignature(routine, *implementors, default=None):
     """
     Retrieve the signature of a callable (method/function/etc).
 
+    |
     Utility function that slightly extends the ``signature`` method of the
     ``inspect`` module and tries some alternatives when the latter fails (which
     it does with certain ``dict`` methods, for example). Apart from the
@@ -123,7 +126,6 @@ def getsignature(routine, *implementors, default=None):
     ``routine`` and, when possible, the docstring are also retrieved.
 
     :param routine: Callable whose signature is to be determined.
-
     :param implementors: Tuple of classes that contain methods of the same
         name as the callable. These serve as a fallback in case the callable
         does not contain enough metadata to accurately retrieve its signature.
@@ -193,7 +195,6 @@ def ordinal(n):
     """Ordinal of an integer, in string format. Stolen from StackOverflow.
 
     :param n: The input integer.
-
     :return: The ordinal of the input, e.g. ``ordinal(3) == '3rd'``
     """
     return f'{n}' + "tsnrhtdd"[(n//10 % 10 != 1) * (n % 10 < 4) * n % 10::4]
@@ -210,9 +211,9 @@ def format_bytes(n, precision=2):
     >>> format_bytes(12345, 0)
     '12 KB'
 
-    :param n:
-    :param precision:
-    :return:
+    :param n: The number to be formatted
+    :param precision: Maximum number of decimal points.
+    :return: A string of the formatted number.
     """
     prefixes, m = ' KMGTPEZY', floor(log2(n)/10)
     mm = min(m, len(prefixes)-1)
